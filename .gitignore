@@ -1,0 +1,15 @@
+# Local test credentials and notes (never commit)
+*.local.md
+test-accounts.local.md
+.env
+.env.*
+
+# Runtime files the agents write (they live in ~/.switch/agents/... at runtime)
+ledger.md
+revisions.md
+change-orders/
+
+# Tooling
+node_modules/
+.DS_Store
+Thumbs.db
