@@ -13,6 +13,8 @@ Stack: one Switch template (YAML, version 1) creating two Claude Code agents and
 - `scripts/build-template.mjs`: assembles the template from the files above
 - `scripts/check-template.py`: validates the template (required agent fields, room and link references, the client kept away from agents and setup messages)
 - `.github/workflows/ci.yml`: on every push and PR: the template matches its sources, passes the check, and no secrets are committed
+- `tests/requests.md`: manual acceptance tests: client messages with expected verdicts and cited § (the spec for agent behaviour)
+- `LICENSE`: MIT, Team Scope Guard
 - `scope-guard.template.yaml`: **generated**; the file imported in Switch Console → Templates
 - `README.md`: for hackathon judges and users
 
@@ -36,7 +38,7 @@ Stack: one Switch template (YAML, version 1) creating two Claude Code agents and
 
 ## Definition of done
 - Verify passes, and the regenerated template is committed together with its source change.
-- When agent behaviour changed: recreate the agents and rooms from the template, then run in Slack: client message → alert in the Scope Desk → Advisor options → vendor picks → ledger row. Also send one in-scope message and confirm nothing happens.
+- When agent behaviour changed: update the affected cases in `tests/requests.md` in the same change, recreate the agents and rooms from the template, run the cases in Slack, and record the result in its Results table.
 - README updated if setup or the flow changed.
 
 ## Gotchas

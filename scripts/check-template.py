@@ -33,8 +33,8 @@ for name, r in rooms.items():
         errors.append(f"room {name}: only Scope Watch may be in the client room")
     if name.endswith("-client") and r.get("kickoff"):
         errors.append(f"room {name}: no kickoff in the client room; the client would see it")
-    if name.endswith("-scope-desk") and "{client}" in r.get("users", []):
-        errors.append(f"room {name}: the client must not be in the Scope Desk")
+    if r.get("users", []) != ["{$creator}"]:
+        errors.append(f"room {name}: the template adds only the vendor; the client is invited by hand to the client room")
 
 for link in t.get("links", []):
     for end in (link["from"], link["to"]):
