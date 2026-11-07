@@ -11,7 +11,11 @@ The client never talks to a bot. They only ever hear from you.
 <!-- TODO: demo video link -->
 
 ## Why
-57% of US agencies lose $1,000–$5,000 a month to unbilled scope creep (Ignition, 2025 survey of 273 agency leaders). The extras arrive in chat, the contract sits in a PDF, and nobody compares the two at the moment it matters.
+**57% of US agencies lose $1,000–$5,000 a month to unbilled scope creep** (Ignition, 2025 survey of 273 agency leaders).
+
+The leak isn't a big, formal request. It's "could you also…" typed into chat by a client you don't want to upset, while the contract that says no sits in a PDF nobody re-reads. Saying "sure!" takes two seconds; checking the SOW takes ten minutes and an awkward conversation. So the work gets done free, and by invoice time it's too late to bill. Time trackers and invoicing tools only see the work after it's done.
+
+Scope Guard checks **every client message against the signed SOW the moment it lands**. It turns "sure, no problem" into a priced change order that you, or any teammate, approve with one click. The client hears only from you. In our test run, two casual messages ("Could you also write the copy for the About page?" and "We need a Careers page as well") held **$525 of out-of-scope work** that would otherwise have been done for free.
 
 ## How it works
 Each client engagement gets two Slack channels (Switch rooms) and two agents:
@@ -100,33 +104,21 @@ What the client sees: a normal project chat with your messages, plus Switch's sm
 ![The client's view: the vendor's own messages, and Switch refusing the client's message to the Advisor](docs/4-client-view.png)
 
 ## Limitations
-What we know doesn't work, or hasn't been proven yet. Test evidence is in [tests/requests.md](tests/requests.md).
+Known gaps, stated plainly. Test evidence is in [tests/requests.md](tests/requests.md).
 
-**Accuracy**
-- **Verdicts and estimates are AI judgement.** Scope Watch cites the SOW section for every verdict, but a vague SOW gives vague answers (that's what UNCLEAR is for). Rates come from the rate card, but the **hours** are the model's estimate. Adjust them before sending (`2, make it 4h`).
-- **Tested by hand, not automatically.** The cases in `tests/requests.md` are run in Slack and the results recorded there. Not every case has been run yet, and there's no automated evaluation of agent behaviour. CI checks the template, not the agents.
-- **Revision rounds are counted by the agent** in a local file (`revisions.md`), based on its reading of "one consolidated round" (SOW §4). Unusual feedback patterns can be miscounted.
-
-**Product scope**
-- **Read-only in the client channel by design.** Every reply to the client comes from you; Scope Guard drafts it.
-- **Approval rights follow room membership.** Everyone in the Scope Desk can approve change orders; there are no per-person roles (such as "can draft but not approve"). Switch Console can restrict the Advisor to named people by hand (**Who can talk to your agent → Custom rules**), but a template can't set that.
-- **No invoicing.** Accepted change orders are logged, not billed. Exporting them to your invoicing tool is manual.
-
-**Platform (Switch and Slack)**
-- **Switch shows that the agent is working.** On Slack, each message Scope Watch handles gets Switch's status thread ("Worked for 34s"), 👀 and ✅ reactions, and a "Starting a session" notice when its session starts. Scope Watch never writes in that channel itself, but the client can see these markers, which is one reason the disclosure matters. Switch has no documented setting to hide them.
-- **Messages with files aren't delivered straight away.** Switch passes a message carrying a file (a screenshot, a PDF) to the assigned agent only if it @-mentions that agent, even when it also has text, and clients don't @-mention it. Scope Watch therefore catches up: when Switch tells it that messages arrived without being delivered, it reads the client channel and handles them, files included. You can also type `@scope-watch catch up` in the Scope Desk. A file can wait until the client's next message or your catch-up. Reported to Switch as [sandbox-quantum/switch#1693](https://github.com/sandbox-quantum/switch/issues/1693).
-- **Switching rooms takes a moment.** Scope Watch briefly leaves the client channel to post each alert, then returns. A client message sent in that moment may be missed.
-- **The SOW field takes text.** The template form can't take a file, so a PDF SOW is attached in the Scope Desk after creation.
-- **Built and tested on Slack only.** Switch also supports Discord, Mattermost and Telegram, but we haven't tried them. Microsoft Teams can't carry file attachments, so SOW uploads won't work there.
-
-**Operations**
-- **Alerts take about 30–60 seconds**, because every client message starts a Claude turn. That also means usage cost grows with chat volume.
-- **One run per client.** Each run creates one client's channels and agents. For the next client, run it again with a new prefix, their name and their SOW.
-- **Changing agent instructions means re-creating the agents and rooms.** Agents keep the instructions they were created with.
-- **No automatic restart.** A local server stops when the computer sleeps or restarts. On a remote host, a reboot also needs a manual restart from Switch Console. Rooms and history survive.
-- **The ledger is a file** (`ledger.md`) in Scope Advisor's working folder on the machine it runs on. Back that machine up.
-- **Client messages are processed by the AI provider** that runs the agents. Scope Guard adds no retention controls of its own.
-- **Licensing.** This repo is MIT, but Switch's license (Apache 2.0 with the Commons Clause) doesn't allow selling a hosted product whose value comes mainly from Switch. A paid hosted version would need a commercial agreement with Switch's authors.
+- **AI judgement.** Every verdict cites the SOW, but a vague SOW gives vague answers (that's what UNCLEAR is for), and revision rounds are the agent's count. Rates come from the rate card; **hours** are estimates, so adjust them (`2, make it 4h`) and log `actual` to see how far off they run.
+- **Tested by hand in Slack**, with results recorded per run. CI checks the template, not agent behaviour.
+- **Files wait for a catch-up.** Switch doesn't deliver a message carrying a file to the assigned agent unless it @-mentions it, so Scope Watch picks screenshots up on the client's next message or your `@scope-watch catch up`. Reported as [switch#1693](https://github.com/sandbox-quantum/switch/issues/1693).
+- **The client can see Switch's status markers** (👀/✅, "Worked for…") on messages Scope Watch reads. That's why setup starts with the disclosure. A client message sent while Scope Watch is posting an alert may be missed.
+- **Approval rights follow room membership.** Everyone in the Scope Desk can approve. Per-person rules exist in Switch Console, but a template can't set them.
+- **Operations.**
+  - Alerts take 30–60 s, and AI cost grows with chat volume.
+  - It's one template run per client.
+  - Agents must be re-created after instruction changes.
+  - A local server stops when the computer sleeps.
+  - The ledger is a file on the agent's machine.
+  - It's tested on Slack only.
+- **Licensing.** This repo is MIT. Switch's Commons Clause rules out selling a hosted version without its authors' agreement.
 
 ## Giving back to Switch
 We tested Switch hard while building this, and shared what we found:
