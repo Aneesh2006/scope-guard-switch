@@ -104,7 +104,7 @@ What we know doesn't work, or hasn't been proven yet. Test evidence is in [tests
 
 **Platform (Switch and Slack)**
 - **Switch shows that the agent is working.** On Slack, each message Scope Watch handles gets Switch's status thread ("Worked for 34s"), 👀 and ✅ reactions, and a "Starting a session" notice when its session starts. Scope Watch never writes in that channel itself, but the client can see these markers, which is one reason the disclosure matters. Switch has no documented setting to hide them.
-- **Messages with files aren't delivered straight away.** Switch passes a message carrying a file (a screenshot, a PDF) to the assigned agent only if it @-mentions that agent, even when it also has text, and clients don't @-mention it. Scope Watch therefore catches up: when Switch tells it that messages arrived without being delivered, it reads the client channel and handles them, files included. You can also type `@scope-watch catch up` in the Scope Desk. A file can wait until the client's next message or your catch-up.
+- **Messages with files aren't delivered straight away.** Switch passes a message carrying a file (a screenshot, a PDF) to the assigned agent only if it @-mentions that agent, even when it also has text, and clients don't @-mention it. Scope Watch therefore catches up: when Switch tells it that messages arrived without being delivered, it reads the client channel and handles them, files included. You can also type `@scope-watch catch up` in the Scope Desk. A file can wait until the client's next message or your catch-up. Reported to Switch as [sandbox-quantum/switch#1693](https://github.com/sandbox-quantum/switch/issues/1693).
 - **Switching rooms takes a moment.** Scope Watch briefly leaves the client channel to post each alert, then returns. A client message sent in that moment may be missed.
 - **The SOW field takes text.** The template form can't take a file, so a PDF SOW is attached in the Scope Desk after creation.
 - **Built and tested on Slack only.** Switch also supports Discord, Mattermost and Telegram, but we haven't tried them. Microsoft Teams can't carry file attachments, so SOW uploads won't work there.
@@ -118,8 +118,13 @@ What we know doesn't work, or hasn't been proven yet. Test evidence is in [tests
 - **Client messages are processed by the AI provider** that runs the agents. Scope Guard adds no retention controls of its own.
 - **Licensing.** This repo is MIT, but Switch's license (Apache 2.0 with the Commons Clause) doesn't allow selling a hosted product whose value comes mainly from Switch. A paid hosted version would need a commercial agreement with Switch's authors.
 
+## Giving back to Switch
+We tested Switch hard while building this, and shared what we found:
+- **Reported upstream:** [sandbox-quantum/switch#1693](https://github.com/sandbox-quantum/switch/issues/1693). Slack messages carrying a file don't reach a room's assigned agent unless they @-mention it. The report includes reproduction steps, versions and screenshots. Scope Guard's catch-up keeps working in the meantime.
+- **Documented for other builders:** the Gotchas in [AGENTS.md](AGENTS.md) record the Switch behaviour we ran into while building: how assigned agents receive messages, why `post_message` doesn't wake an agent, that an agent is in one room at a time, and that room documents are readable only from their own room. Each one cost us a debugging session, so it may save you one.
+
 ## Roadmap
-1. **Read screenshots without catch-up**: once Switch passes file messages to an assigned agent (we'll report this upstream).
+1. **Read screenshots without catch-up**, as soon as [switch#1693](https://github.com/sandbox-quantum/switch/issues/1693) is resolved.
 2. **Team approvals**: let named agency teammates approve change orders, using Switch's per-person rules for who can talk to an agent.
 3. **Invoicing**: send accepted change orders to Stripe, QuickBooks or Xero as draft invoice lines.
 4. **Estimates vs actuals**: compare change-order hours with time tracked in Harvest or Toggl, so estimates improve over time.
