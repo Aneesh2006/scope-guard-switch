@@ -47,23 +47,14 @@ ${block(sow, 6)}
     label: Runs on
     default: [$first]
     input: advanced
-  watch_dir:
-    type: directory
-    label: Scope Watch folder
-    default: "{$agents_dir}/scope-watch"
-    input: advanced
-  advisor_dir:
-    type: directory
-    label: Scope Advisor folder
-    default: "{$agents_dir}/scope-advisor"
-    input: advanced
 agents:
   - name: "{team}-watch"
     display_name: Scope Watch
     description: Listens silently to the client channel and alerts the vendor's Scope Desk about out-of-scope requests.
     provider: claude
     machine: "{machine}"
-    directory: "{watch_dir}"
+    # One folder per prefix, so each client's revisions.md and ledger.md stay separate.
+    directory: "{$agents_dir}/{team}-watch"
     addressing: anyone
     auto_mode: true
     instructions: |
@@ -73,7 +64,7 @@ ${block(watch, 6)}
     description: The vendor's private assistant. Offers options, drafts client replies and keeps the change-order ledger.
     provider: claude
     machine: "{machine}"
-    directory: "{advisor_dir}"
+    directory: "{$agents_dir}/{team}-advisor"
     addressing: owner-agents
     auto_mode: false
     instructions: |

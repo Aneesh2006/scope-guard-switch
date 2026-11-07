@@ -21,6 +21,8 @@ for name, a in agents.items():
             errors.append(f"agent {name}: missing {key}")
     if not (a.get("machine") or a.get("location")):
         errors.append(f"agent {name}: missing machine or location")
+    if "{team}" not in str(a.get("directory", "")):
+        errors.append(f"agent {name}: directory must include {{team}}, or every client shares one ledger")
     used = params & set(re.findall(r"\{(\w+)\}", a.get("instructions", "")))
     if used:
         errors.append(f"agent {name}: instructions use template params {sorted(used)}; refer to rooms and agents by name suffix")
