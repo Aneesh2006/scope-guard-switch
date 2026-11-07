@@ -69,7 +69,7 @@ group:
   description: Scope Guard for the Acme Co website project.
 rooms:
   - name: "{team}-acme-client"
-    description: Project chat with Acme Co. An AI assistant (Scope Watch) reads this channel for the vendor to track scope. It never posts here.
+    description: Project chat with Acme Co. An AI assistant (Scope Watch) reads this channel for the vendor to track scope. It never writes messages here.
     bridge: "{bridge}"
     channel_type: channel_private
     agents: ["{team}-watch"]

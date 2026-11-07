@@ -18,7 +18,7 @@ Each client engagement gets two Slack channels (Switch rooms) and two agents:
 
 | Room | Members | Purpose |
 |---|---|---|
-| **Client channel** `<prefix>-acme-client` | You, the client, *Scope Watch* | The normal project chat. Scope Watch reads every message and **never posts here**. |
+| **Client channel** `<prefix>-acme-client` | You, the client, *Scope Watch* | The normal project chat. Scope Watch reads every message and **never writes a message here**. |
 | **Scope Desk** `<prefix>-acme-scope-desk` (private) | You, *Scope Watch*, *Scope Advisor* | Scope alerts, your options, drafted replies, and the SOW and Scope notes documents. |
 
 | Agent | Job | Who can talk to it |
@@ -60,10 +60,11 @@ Scope Advisor asks what you'd like to do. You reply `2` ("charge extra") and get
 | Attach a SOW (PDF or text) | Saves it as **SOW (uploaded)**, which replaces the sample SOW |
 | `summary` | Totals from the ledger: recovered, proposed, given away, declined |
 | `status CO-001` | The latest row for that change order |
+| `@scope-watch catch up` | Scope Watch (not the Advisor) checks the client channel for messages it missed, such as screenshots, and alerts on them |
 
 ## What breaks without Switch
 - **The agent can't sit in the client's channel.** Switch makes a Claude Code session a member of a Slack channel, and `!assign-agent` gives it every message without an @-mention. Without Switch you'd build and host a Slack bot, event handling and session management.
-- **No private side room.** Switch rooms and their membership keep the Advisor and the client apart. The client channel has only Scope Watch, which never posts there; the Advisor exists only in the Scope Desk.
+- **No private side room.** Switch rooms and their membership keep the Advisor and the client apart. The client channel has only Scope Watch, which never writes there; the Advisor exists only in the Scope Desk.
 - **No enforced boundary.** Scope Advisor accepts messages only from you and your own agents. Switch refuses anyone else, including the client. That's enforced by Switch, not by a prompt.
 - **No shared source of truth.** The SOW and Scope notes are Switch room documents, so every agent reads the same version.
 - **No sign-off in chat.** Scope Advisor runs with auto mode off, so its ledger writes appear in the Scope Desk as permission requests you allow or deny.
@@ -73,8 +74,8 @@ Scope Advisor asks what you'd like to do. You reply `2` ("charge extra") and get
 You need Switch Console with a running server, Slack connected to it (Home → Messaging apps), your own Slack account linked (**This is me**), and Claude Code installed and signed in.
 
 1. **Create the rooms.** In Switch Console, go to **Templates**, paste `scope-guard.template.yaml` and choose **Create**. It asks for a name prefix (default `scope`). This creates both agents, the private Scope Desk with the sample SOW, and the client channel, with only you in it so far.
-2. **Point Scope Watch at the client channel.** In the client channel, type `!assign-agent @scope-watch` (use your prefix). Then type `!assign-agent` on its own: it should name Scope Watch. Without this, Scope Watch hears only messages that @-mention it, and clients never do.
-3. **Tell the client.** Post a short note in the client channel, for example: *"Heads-up: I use an AI assistant that reads this channel to keep track of what's in our agreement (SOW §8). It never posts here; everything you hear comes from me. Just ask if you'd like it turned off."*
+2. **Point Scope Watch at the client channel.** In the client channel, type `!assign-agent @scope-watch` (use your prefix). Then type `!assign-agent` on its own: it should name Scope Watch. Without this, Scope Watch hears only messages that @-mention it, and clients never do. Then, in the **Scope Desk**, type `!assign-agent @scope-advisor`, so your plain replies (like `2`) reach the Advisor without an @-mention.
+3. **Tell the client.** Post a short note in the client channel, for example: *"Heads-up: I use an AI assistant that reads this channel to keep track of what's in our agreement (SOW §8). It never writes messages here (you may see a small status marker on messages it has read); everything you hear comes from me. Just ask if you'd like it turned off."*
 4. **Invite the client** to the Slack channel. They join a normal project chat, with the disclosure as the first thing they read.
 
 **Running it 24/7:** a local Switch server stops when your computer sleeps or restarts. For always-on use, add a Linux machine (for example an Ubuntu EC2 instance) in Switch Console → Settings → Remote hosts, and run the server and both agents there.
@@ -84,6 +85,8 @@ The client is told up front (step 3, and SOW §8) that an AI assistant reads the
 
 ## Limitations
 - **Read-only in the client channel by design.** Every reply to the client comes from you; Scope Guard drafts it.
+- **Switch shows that the agent is working.** On Slack, each message Scope Watch handles gets Switch's status thread ("Worked for 34s"), 👀 and ✅ reactions, and a "Starting a session" notice when its session starts. Scope Watch never writes in that channel itself, but the client can see these markers, which is one reason the disclosure matters. Switch has no documented setting to hide them.
+- **Messages with files aren't delivered straight away.** Switch passes a message carrying a file (a screenshot, a PDF) to the assigned agent only if it @-mentions that agent, even when it also has text, and clients don't @-mention it. Scope Watch therefore catches up: when Switch tells it that messages arrived without being delivered, it reads the client channel and handles them, files included. You can also type `@scope-watch catch up` in the Scope Desk. A file can wait until the client's next message or your catch-up.
 - **Switching rooms takes a moment.** Scope Watch briefly leaves the client channel to post each alert, then returns. A client message sent in that moment may be missed.
 - **One template per client.** Each run creates one client's channels. Run it again with a new prefix for the next client.
 - **The ledger is a file** (`ledger.md`) in Scope Advisor's working folder on the machine it runs on. Back that machine up.
