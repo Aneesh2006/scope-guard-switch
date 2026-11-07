@@ -58,7 +58,8 @@ Scope Advisor asks what you'd like to do. You reply `2` ("charge extra") and get
 | `1`, `2`, `3` or `4` (e.g. `2, make it 4h`) | Drafts the client reply for that option and logs the decision |
 | `notes: <text>` | Adds a dated line to the **Scope notes** document. Notes count as scope from then on. |
 | Attach a SOW (PDF or text) | Saves it as **SOW (uploaded)**, which replaces the sample SOW |
-| `summary` | Totals from the ledger: recovered, proposed, given away, declined |
+| `actual CO-001 8h` | Logs the hours the work really took, next to the estimate |
+| `summary` | Totals from the ledger: recovered, proposed, given away, declined, and estimated vs actual hours. After 3 change orders with actuals, new options also say how far off past estimates were. |
 | `status CO-001` | The latest row for that change order |
 | `@scope-watch catch up` | Scope Watch (not the Advisor) checks the client channel for messages it missed, such as screenshots, and alerts on them |
 
@@ -127,7 +128,7 @@ We tested Switch hard while building this, and shared what we found:
 ## Roadmap
 1. **Read screenshots without catch-up**, as soon as [switch#1693](https://github.com/sandbox-quantum/switch/issues/1693) is resolved.
 2. **Invoicing**: send accepted change orders to Stripe, QuickBooks or Xero as draft invoice lines.
-3. **Estimates vs actuals**: compare change-order hours with time tracked in Harvest or Toggl, so estimates improve over time.
+3. **Time-tracker import**: pull actual hours from Harvest or Toggl instead of typing `actual CO-001 8h`.
 4. **Automated evaluation**: run `tests/requests.md` against the agent instructions on every change, and fail CI when a verdict regresses.
 5. **Weekly scope digest**: a scheduled summary per client of requests, change orders and money recovered or given away.
 

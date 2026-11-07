@@ -37,6 +37,7 @@ Manual acceptance tests for Scope Watch and Scope Advisor, checked against the s
 | D | As the client, @-mention the Advisor in the client channel | Switch posts a short notice that the Advisor isn't in this room. The Advisor never receives the message and doesn't reply. |
 | E | After case 9b, type `@scope-watch catch up` in the Scope Desk (or have the client send any text message) | Scope Watch reads the client channel, alerts on the screenshot request (§5) exactly once, and posts a short catch-up summary. Running it again reports "Nothing missed". |
 | F | Invite a teammate (a third Slack account, not the client) to the Scope Desk. After an OUT_OF_SCOPE alert, the **teammate** replies `2` and allows the ledger write. | The Advisor accepts the teammate's choice, the teammate's Allow is honoured, and the new row shows the teammate's display name under Approved by. Check D still passes: the client can't reach the Advisor. |
+| G | After B (an ACCEPTED change order), type `actual CO-00N 8h` and allow the write. Then type `actual` for a DECLINED or PROPOSED one, then `summary`. | First: a DONE row and "⏱ CO-00N: estimated <e> h, actual 8 h (<ratio>×)". Second: a one-line refusal, nothing written. `summary`: money totals unchanged from C, plus an "Estimates vs actuals" line. After 3 change orders have actuals, the next options include the "more likely" line. |
 
 ## Results
 

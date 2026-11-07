@@ -33,7 +33,7 @@ Stack: one Switch template (YAML, version 1) creating two Claude Code agents and
 
 ## Conventions (only non-obvious ones)
 - Agents find rooms and each other by **name suffix** (`-client`, `-scope-desk`, `-watch`, `-advisor`), never by `{param}` placeholders (see commit f72ebad).
-- The ledger (`ledger.md` in Scope Advisor's working folder) is append-only: corrections are new rows. Statuses: ABSORBED, PROPOSED, DECLINED, ACCEPTED, DECLINED_BY_CLIENT.
+- The ledger (`ledger.md` in Scope Advisor's working folder) is append-only: corrections are new rows. Statuses: ABSORBED, PROPOSED, DECLINED, ACCEPTED, DECLINED_BY_CLIENT, and DONE (actual hours, from `actual CO-00N <h>h`). DONE rows hold time, not money: money totals use each change order's latest non-DONE row.
 - Commit messages: `feat:`, `fix:`, `documentation:`, `chore:`.
 
 ## Definition of done
