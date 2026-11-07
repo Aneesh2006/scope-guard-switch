@@ -3,7 +3,7 @@
 ## What this is
 A silent scope checker for freelancers and agencies. It reads the client's chat, flags requests the signed SOW doesn't cover, and helps the vendor reply privately; the client never talks to a bot.
 Users: the vendor (agency or freelancer); the client only sees the vendor's own messages.
-Stack: one Switch template (YAML, version 1) creating two Claude Code agents and two chat rooms (tested on Slack and Mattermost). Node ≥18 (stdlib only) generates the template. There is no app, server or database.
+Stack: one Switch template (YAML, version 1) creating two Claude Code agents and two Slack rooms. Node ≥18 (stdlib only) generates the template. There is no app, server or database.
 
 ## Repo map
 - `agents/watch/INSTRUCTIONS.md`: Scope Watch, the silent listener in the client room

@@ -6,7 +6,7 @@
 
 The client never talks to a bot. They only ever hear from you.
 
-> Built for the [Flip the Switch hackathon](https://www.wemakedevs.org/hackathons/switch) (Track 01: Best Business Workflow) on [Switch](https://github.com/sandbox-quantum/switch). Runs on Slack and Mattermost, with Claude Code as the agents. **No application code:** the whole product is one Switch template.
+> Built for the [Flip the Switch hackathon](https://www.wemakedevs.org/hackathons/switch) (Track 01: Best Business Workflow) on [Switch](https://github.com/sandbox-quantum/switch). Runs on Slack, with Claude Code as the agents. **No application code:** the whole product is one Switch template.
 
 **▶ [Watch the demo video](https://www.youtube.com/watch?v=nKhULShxu3M)**: a client asks for extra work in Slack, Scope Guard flags it, a teammate approves the change order, and the client never talks to a bot.
 
@@ -95,13 +95,13 @@ Anyone in the Scope Desk (you or a teammate) can use these. No @-mention needed.
 
 ## Setup
 
-You need Switch Console with a running server, Slack or Mattermost connected to it (Home → Messaging apps), your own account on it linked (**This is me**), and Claude Code installed and signed in.
+You need Switch Console with a running server, Slack connected to it (Home → Messaging apps), your own Slack account linked (**This is me**), and Claude Code installed and signed in.
 
 1. **Create the rooms.** In Switch Console, go to **Templates**, paste `scope-guard.template.yaml` and choose **Use template**. The form asks for:
    - **Name prefix** (default `scope`): the agents become `<prefix>-watch` and `<prefix>-advisor`. Use a new prefix for each client.
    - **Client name** (default `acme`): used in the channel names, e.g. `scope-globex-client`.
    - **Signed scope of work (SOW)**: paste your client's SOW as text, keeping its section numbers. It's pre-filled with the Acme sample. Got a PDF? Keep the sample here and attach the PDF in the Scope Desk afterwards: the Advisor saves it as "SOW (uploaded)", which takes precedence.
-   - **Messaging app**: your Slack or Mattermost connection. The same template works on both, with no changes. It has no platform-specific code, so Discord and Telegram connections should work too, but we haven't tested them. For Mattermost, set **Callback Base Url** when you connect it in Switch Console, or permission requests come without Allow/Deny buttons.
+   - **Messaging app**: your Slack connection. The template has no Slack-specific code, so this field can also point at a Mattermost, Discord or Telegram connection in Switch, but we've only tested Slack.
 
    **Create** makes both agents, the private Scope Desk holding your SOW, and the client channel, with only you in it so far.
 
@@ -137,7 +137,7 @@ Known gaps, stated plainly. Test evidence is in [tests/requests.md](tests/reques
   - Agents must be re-created after instruction changes.
   - A local server stops when the computer sleeps.
   - The ledger is a file on the agent's machine.
-  - It's tested on Slack and Mattermost, not yet on Discord or Telegram.
+  - It's tested on Slack only.
 - **Licensing.** This repo is MIT. Switch's Commons Clause rules out selling a hosted version without its authors' agreement.
 
 ## Giving back to Switch
