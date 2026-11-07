@@ -17,6 +17,7 @@ Stack: one Switch template (YAML, version 1) creating two Claude Code agents and
 - `LICENSE`: MIT, Team Scope Guard
 - `scope-guard.template.yaml`: **generated**; the file imported in Switch Console → Templates
 - `README.md`: for hackathon judges and users
+- `DEPLOYMENT.md`: running it 24/7 on AWS EC2 as a Switch remote host
 
 ## Commands
 - Install: nothing to install. Needs Node ≥18, plus Python with PyYAML for the verify step.
@@ -48,7 +49,7 @@ Stack: one Switch template (YAML, version 1) creating two Claude Code agents and
 - **`post_message` doesn't wake an agent.** Use `send_targeted_message(target_names=[…])`, and never write `@name` in a `post_message` body.
 - **An agent is connected to one room at a time.** Scope Watch must `connect_to_room` back to the client room after posting in the Scope Desk, or it stops hearing the client.
 - **Documents are readable only from their own room** (`load_internal_documents`). `read_context` reads messages, not documents. An agent can update only documents it created, which is why an uploaded SOW becomes a new "SOW (uploaded)" document.
-- **The client is never added by the template, and the client room has no kickoff.** The vendor runs `!assign-agent` first, posts the AI disclosure (SOW §8), then invites the client (README, Setup). A kickoff would be visible to the client, and it isn't documented whether a kickoff runs `!` commands at all. `check-template.py` enforces this.
+- **The client is never added by the template, and the client room has no kickoff.** The vendor runs `!assign-agent` first, posts the AI disclosure note, then invites the client (README, Setup). A kickoff would be visible to the client, and it isn't documented whether a kickoff runs `!` commands at all. `check-template.py` enforces this.
 - **Runtime agents don't read this file.** They work in Switch's agents folder, outside this repo. Their instructions live in the template.
 - **Local test runs load your personal `~/.claude` setup** (plugins and hooks) into the runtime agents. Disable plugins that change reply style before testing.
 - Git's "LF will be replaced by CRLF" warning on the template is harmless.

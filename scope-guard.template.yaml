@@ -8,6 +8,56 @@ params:
     description: Agents are created as <prefix>-watch and <prefix>-advisor.
     default: scope
     pattern: "^[a-z0-9][a-z0-9-]*$"
+  client:
+    type: string
+    label: Client name
+    description: Short name for this client, used in the channel names (acme gives <prefix>-acme-client).
+    default: acme
+    pattern: "^[a-z0-9][a-z0-9-]*$"
+  scope_document:
+    type: string
+    label: Signed scope of work (SOW)
+    description: Paste this client's SOW as text, keeping its section numbers. Pre-filled with the Acme sample. A PDF can be attached in the Scope Desk later.
+    multiline: true
+    required: true
+    default: |
+      # Statement of Work: Acme Co website redesign
+
+      **Vendor:** Sam Rivera (freelance designer and developer)
+      **Client:** Acme Co, contact Dana Lee (Marketing Lead)
+      **Signed:** 2026-10-20 · **Start:** 2026-10-27 · **Delivery:** 2026-12-05
+
+      ## §1 Purpose
+      Redesign and rebuild Acme Co's marketing website on the client's existing WordPress hosting.
+
+      ## §2 Deliverables
+      - §2.1 **Homepage**: hero section, three feature blocks, testimonials and footer.
+      - §2.2 **About**: company story and a team grid of up to 8 people.
+      - §2.3 **Services**: one page listing up to 6 services.
+      - §2.4 **Blog index**: a listing template. Individual posts use the theme's default post template.
+      - §2.5 **Contact**: a contact form that sends to up to 2 email addresses, plus an embedded map.
+
+      ## §3 Page count
+      The site has the **5 pages listed in §2**. Additional pages or templates are out of scope.
+
+      ## §4 Revisions
+      Each deliverable in §2 includes **2 revision rounds**. A round is one consolidated list of feedback sent in a single message. Feedback after the second round is billed as a change order.
+
+      ## §5 Exclusions
+      The following are not included: copywriting, stock photo purchases, logo or brand identity work, SEO migration or redirects, hosting, e-commerce, and multilingual versions.
+
+      ## §6 Rate card
+      | Work type | Rate |
+      |---|---|
+      | Design | $60 / hour |
+      | Development | $75 / hour |
+      | Minimum change order | 1 hour |
+
+      ## §7 Change process
+      Out-of-scope work requires a written change order. The client accepts the change order in the project chat, and the vendor approves it before work starts. Work is not started on unapproved change orders.
+
+      ## §8 AI assistant
+      The vendor uses an AI assistant (Scope Guard) that reads the messages and files in the project chat and compares requests with this agreement. It never writes messages in the project chat, never contacts the client, and never makes decisions: every reply, price and change order comes from the vendor. Messages it has read may show a small automatic status marker. Messages are processed by the vendor's AI provider. The client may ask the vendor at any time to turn it off for this project.
   bridge:
     type: bridge
     default: [Slack, Mattermost, $first]
@@ -145,30 +195,30 @@ agents:
       - Never change amounts that Scope Watch estimated unless the vendor says so ("make it 4h").
       - The ledger is append-only. Corrections are new rows.
 group:
-  name: "Acme Co ({team})"
-  description: Scope Guard for the Acme Co website project.
+  name: "{client} ({team})"
+  description: Scope Guard for the {client} project.
 rooms:
-  - name: "{team}-acme-client"
-    description: Project chat with Acme Co. An AI assistant (Scope Watch) reads this channel for the vendor to track scope. It never writes messages here.
+  - name: "{team}-{client}-client"
+    description: Project chat with {client}. An AI assistant (Scope Watch) reads this channel for the vendor to track scope. It never writes messages here.
     bridge: "{bridge}"
     channel_type: channel_private
     agents: ["{team}-watch"]
     # The client is invited by hand after !assign-agent, so they never see setup commands (README, Setup).
     users: ["{$creator}"]
     instructions: |
-      Client conversation for the Acme Co website, between the vendor and the client.
+      Client conversation for this project, between the vendor and the client.
 
       Agents in this room only listen. They never post here. Scope questions are handled privately by the vendor.
 
-      The client has been told that an AI assistant reads this channel (SOW §8). If the client asks for it to be turned off, the vendor does that; agents never answer here.
-  - name: "{team}-acme-scope-desk"
+      The client has been told that an AI assistant reads this channel (the vendor's disclosure note in this channel). If the client asks for it to be turned off, the vendor does that; agents never answer here.
+  - name: "{team}-{client}-scope-desk"
     description: The vendor's private Scope Desk. The client is not here.
     bridge: "{bridge}"
     channel_type: channel_private
     agents: ["{team}-watch", "{team}-advisor"]
     users: ["{$creator}"]
     instructions: |
-      The vendor's private Scope Desk for the Acme Co website. The client is not here.
+      The vendor's private Scope Desk for this client's project. The client is not here.
 
       - **Scope Watch** listens to the client room (the room whose name ends in `-client`) and posts scope alerts here.
       - **Scope Advisor** offers options for each alert, drafts the client reply, saves uploaded SOWs as "SOW (uploaded)", keeps the "Scope notes" document, and keeps the change-order ledger. The original "SOW" document is never edited.
@@ -176,46 +226,9 @@ rooms:
       - Keep replies short. Quote SOW sections (§) and dated notes.
     docs:
       - name: SOW
-        description: Signed Statement of Work for the Acme Co website. The source of truth for scope.
+        description: The signed Statement of Work for {client}. The source of truth for scope.
         instructions: Read this before classifying any request. Cite its section numbers.
-        content: |
-          # Statement of Work: Acme Co website redesign
-
-          **Vendor:** Sam Rivera (freelance designer and developer)
-          **Client:** Acme Co, contact Dana Lee (Marketing Lead)
-          **Signed:** 2026-10-20 · **Start:** 2026-10-27 · **Delivery:** 2026-12-05
-
-          ## §1 Purpose
-          Redesign and rebuild Acme Co's marketing website on the client's existing WordPress hosting.
-
-          ## §2 Deliverables
-          - §2.1 **Homepage**: hero section, three feature blocks, testimonials and footer.
-          - §2.2 **About**: company story and a team grid of up to 8 people.
-          - §2.3 **Services**: one page listing up to 6 services.
-          - §2.4 **Blog index**: a listing template. Individual posts use the theme's default post template.
-          - §2.5 **Contact**: a contact form that sends to up to 2 email addresses, plus an embedded map.
-
-          ## §3 Page count
-          The site has the **5 pages listed in §2**. Additional pages or templates are out of scope.
-
-          ## §4 Revisions
-          Each deliverable in §2 includes **2 revision rounds**. A round is one consolidated list of feedback sent in a single message. Feedback after the second round is billed as a change order.
-
-          ## §5 Exclusions
-          The following are not included: copywriting, stock photo purchases, logo or brand identity work, SEO migration or redirects, hosting, e-commerce, and multilingual versions.
-
-          ## §6 Rate card
-          | Work type | Rate |
-          |---|---|
-          | Design | $60 / hour |
-          | Development | $75 / hour |
-          | Minimum change order | 1 hour |
-
-          ## §7 Change process
-          Out-of-scope work requires a written change order. The client accepts the change order in the project chat, and the vendor approves it before work starts. Work is not started on unapproved change orders.
-
-          ## §8 AI assistant
-          The vendor uses an AI assistant (Scope Guard) that reads the messages and files in the project chat and compares requests with this agreement. It never writes messages in the project chat, never contacts the client, and never makes decisions: every reply, price and change order comes from the vendor. Messages it has read may show a small automatic status marker. Messages are processed by the vendor's AI provider. The client may ask the vendor at any time to turn it off for this project.
+        content: "{scope_document}"
     kickoff: "@{team}-advisor hi! Introduce yourself in 3 short lines, say what the SOW covers, and ask me for meeting notes."
 links:
-  - { from: "{team}-acme-client", to: "{team}-acme-scope-desk", label: "scope alerts" }
+  - { from: "{team}-{client}-client", to: "{team}-{client}-scope-desk", label: "scope alerts" }

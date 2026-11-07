@@ -2,7 +2,7 @@
 
 Manual acceptance tests for Scope Watch and Scope Advisor, checked against the sample SOW (`samples/sow-acme-website.md`).
 
-**How to run:** create fresh rooms from the template and do the README setup, including `!assign-agent` in **both** rooms. Then post each message **as the client** in the client channel, in order, one at a time. Wait for the Scope Desk to settle before sending the next one. Cases 3–5 depend on each other.
+**How to run:** create fresh rooms from the template with the default **Client name** (`acme`) and the pre-filled sample **SOW**, and do the README setup, including `!assign-agent` in **both** rooms. Then post each message **as the client** in the client channel, in order, one at a time. Wait for the Scope Desk to settle before sending the next one. Cases 3–5 depend on each other.
 
 **Pass when:**
 - **IN_SCOPE / NOT_A_REQUEST:** nothing appears in the Scope Desk.

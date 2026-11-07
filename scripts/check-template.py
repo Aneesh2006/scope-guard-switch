@@ -41,6 +41,12 @@ for link in t.get("links", []):
         if end not in rooms:
             errors.append(f"link: unknown room {end}")
 
+# A {placeholder} that names no param is left as written, so a typo would create "{clinet}" channels.
+known = params | {"$creator", "$creator_email", "$date", "$timestamp", "$agents_dir", "agent"}
+outside_instructions = yaml.safe_dump({k: v for k, v in t.items() if k not in ("params", "agents")})
+for name in sorted(set(re.findall(r"\{(\$?\w+)\}", outside_instructions)) - known):
+    errors.append(f"unknown placeholder {{{name}}} in rooms, group or links")
+
 for e in errors:
     print(f"::error file={path}::{e}")
 print(f"{path}: {len(agents)} agents, {len(rooms)} rooms, {len(errors)} problems")

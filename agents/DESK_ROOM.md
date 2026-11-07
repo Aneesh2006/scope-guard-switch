@@ -1,4 +1,4 @@
-The vendor's private Scope Desk for the Acme Co website. The client is not here.
+The vendor's private Scope Desk for this client's project. The client is not here.
 
 - **Scope Watch** listens to the client room (the room whose name ends in `-client`) and posts scope alerts here.
 - **Scope Advisor** offers options for each alert, drafts the client reply, saves uploaded SOWs as "SOW (uploaded)", keeps the "Scope notes" document, and keeps the change-order ledger. The original "SOW" document is never edited.

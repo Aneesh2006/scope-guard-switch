@@ -25,6 +25,20 @@ params:
     description: Agents are created as <prefix>-watch and <prefix>-advisor.
     default: scope
     pattern: "^[a-z0-9][a-z0-9-]*$"
+  client:
+    type: string
+    label: Client name
+    description: Short name for this client, used in the channel names (acme gives <prefix>-acme-client).
+    default: acme
+    pattern: "^[a-z0-9][a-z0-9-]*$"
+  scope_document:
+    type: string
+    label: Signed scope of work (SOW)
+    description: Paste this client's SOW as text, keeping its section numbers. Pre-filled with the Acme sample. A PDF can be attached in the Scope Desk later.
+    multiline: true
+    required: true
+    default: |
+${block(sow, 6)}
   bridge:
     type: bridge
     default: [Slack, Mattermost, $first]
@@ -65,11 +79,11 @@ ${block(watch, 6)}
     instructions: |
 ${block(advisor, 6)}
 group:
-  name: "Acme Co ({team})"
-  description: Scope Guard for the Acme Co website project.
+  name: "{client} ({team})"
+  description: Scope Guard for the {client} project.
 rooms:
-  - name: "{team}-acme-client"
-    description: Project chat with Acme Co. An AI assistant (Scope Watch) reads this channel for the vendor to track scope. It never writes messages here.
+  - name: "{team}-{client}-client"
+    description: Project chat with {client}. An AI assistant (Scope Watch) reads this channel for the vendor to track scope. It never writes messages here.
     bridge: "{bridge}"
     channel_type: channel_private
     agents: ["{team}-watch"]
@@ -77,7 +91,7 @@ rooms:
     users: ["{$creator}"]
     instructions: |
 ${block(clientRoom, 6)}
-  - name: "{team}-acme-scope-desk"
+  - name: "{team}-{client}-scope-desk"
     description: The vendor's private Scope Desk. The client is not here.
     bridge: "{bridge}"
     channel_type: channel_private
@@ -87,13 +101,12 @@ ${block(clientRoom, 6)}
 ${block(deskRoom, 6)}
     docs:
       - name: SOW
-        description: Signed Statement of Work for the Acme Co website. The source of truth for scope.
+        description: The signed Statement of Work for {client}. The source of truth for scope.
         instructions: Read this before classifying any request. Cite its section numbers.
-        content: |
-${block(sow, 10)}
+        content: "{scope_document}"
     kickoff: "@{team}-advisor hi! Introduce yourself in 3 short lines, say what the SOW covers, and ask me for meeting notes."
 links:
-  - { from: "{team}-acme-client", to: "{team}-acme-scope-desk", label: "scope alerts" }
+  - { from: "{team}-{client}-client", to: "{team}-{client}-scope-desk", label: "scope alerts" }
 `;
 
 writeFileSync(join(root, 'scope-guard.template.yaml'), yaml);

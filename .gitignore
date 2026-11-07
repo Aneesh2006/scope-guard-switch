@@ -3,6 +3,7 @@
 test-accounts.local.md
 .env
 .env.*
+*.pem
 
 # Runtime files the agents write (they live in ~/.switch/agents/... at runtime)
 ledger.md
