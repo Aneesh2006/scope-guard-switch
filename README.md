@@ -8,7 +8,9 @@ The client never talks to a bot. They only ever hear from you.
 
 > Built for the [Flip the Switch hackathon](https://www.wemakedevs.org/hackathons/switch) (Track 01: Best Business Workflow) on [Switch](https://github.com/sandbox-quantum/switch). Runs on Slack, with Claude Code as the agents. **No application code:** the whole product is one Switch template.
 
-**▶ [Watch the demo video](https://www.youtube.com/watch?v=nKhULShxu3M)**: a client asks for extra work in Slack, Scope Guard flags it, a teammate approves the change order, and the client never talks to a bot.
+**▶ [Watch the 3-minute demo](https://youtu.be/ZA7wAsf2zXI)**: a client asks for extra work in Slack, Scope Guard flags it, a teammate approves the change order, and the client never talks to a bot.
+
+**🎬 [Full walkthrough](https://www.youtube.com/watch?v=nKhULShxu3M)**: the longer version, with every step of the flow.
 
 **📝 [Read the build story on Medium](https://medium.com/@jaisheesh.venkat/ai-scope-creep-checker-for-slack-built-on-switch-214efe05ee22)**: why we built it, the Switch behaviour we had to learn, and how we tested agents in Slack.
 
