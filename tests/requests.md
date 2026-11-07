@@ -36,6 +36,7 @@ Manual acceptance tests for Scope Watch and Scope Advisor, checked against the s
 | C | Type `summary` in the Scope Desk | Totals match the ledger rows: recovered, proposed, given away, declined |
 | D | As the client, @-mention the Advisor in the client channel | Switch posts a short notice that the Advisor isn't in this room. The Advisor never receives the message and doesn't reply. |
 | E | After case 9b, type `@scope-watch catch up` in the Scope Desk (or have the client send any text message) | Scope Watch reads the client channel, alerts on the screenshot request (§5) exactly once, and posts a short catch-up summary. Running it again reports "Nothing missed". |
+| F | Invite a teammate (a third Slack account, not the client) to the Scope Desk. After an OUT_OF_SCOPE alert, the **teammate** replies `2` and allows the ledger write. | The Advisor accepts the teammate's choice, the teammate's Allow is honoured, and the new row shows the teammate's display name under Approved by. Check D still passes: the client can't reach the Advisor. |
 
 ## Results
 

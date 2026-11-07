@@ -27,7 +27,7 @@ Stack: one Switch template (YAML, version 1) creating two Claude Code agents and
 ## Golden rules
 - Never commit secrets: Slack tokens (`xoxb-`, `xapp-`), API keys, `.env*`, `*.local.md`.
 - Never edit `scope-guard.template.yaml` by hand. Edit the source `.md` files or the script, then build.
-- Never weaken the product's hard rules: agents never post in the client room; no ledger entry without the vendor allowing the write; every verdict cites the SOW (§) or dated notes; estimates use only the SOW rate card.
+- Never weaken the product's hard rules: agents never post in the client room; no ledger entry without someone in the Scope Desk allowing the write; the Advisor is never in a room the client is in (its addressing is `anyone`, so room membership is its access list); every verdict cites the SOW (§) or dated notes; estimates use only the SOW rate card.
 - Only use template keys documented in Switch's [TEMPLATES.md](https://github.com/sandbox-quantum/switch/blob/main/docs/TEMPLATES.md). Never invent keys.
 - Don't add dependencies or a `package.json` without saying why. The generator is stdlib-only on purpose.
 
@@ -45,6 +45,7 @@ Stack: one Switch template (YAML, version 1) creating two Claude Code agents and
 - **Agents created earlier keep their old instructions.** After changing instructions, delete the agents and rooms and create them again from the template (or use a new `team` prefix).
 - **A plain message reaches no agent** unless it @-mentions one, follows up on that agent's answer to the same person, or the room has an assigned agent. Setup assigns Scope Watch in the client room and Scope Advisor in the Scope Desk (`!assign-agent`), or the vendor's plain `2` goes nowhere.
 - **Messages carrying a file aren't delivered to an assigned agent** unless they @-mention it (verified in Slack, case 9b). Scope Watch catches up via `read_context` when Switch reports undelivered messages, or when the vendor says `@scope-watch catch up`. The real fix belongs in Switch.
+- **Only people who can talk to an agent can answer its permission requests**; anyone else's answer is ignored and the request stays open. That's why team approval is just the Advisor's `addressing: anyone` plus Scope Desk membership.
 - **`post_message` doesn't wake an agent.** Use `send_targeted_message(target_names=[…])`, and never write `@name` in a `post_message` body.
 - **An agent is connected to one room at a time.** Scope Watch must `connect_to_room` back to the client room after posting in the Scope Desk, or it stops hearing the client.
 - **Documents are readable only from their own room** (`load_internal_documents`). `read_context` reads messages, not documents. An agent can update only documents it created, which is why an uploaded SOW becomes a new "SOW (uploaded)" document.

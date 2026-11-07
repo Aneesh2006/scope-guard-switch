@@ -65,7 +65,9 @@ ${block(watch, 6)}
     provider: claude
     machine: "{machine}"
     directory: "{$agents_dir}/{team}-advisor"
-    addressing: owner-agents
+    # anyone = the members of its rooms. The Advisor is only in the Scope Desk, so your team can
+    # choose options and allow ledger writes, and the client can't (check-template.py keeps it out of the client room).
+    addressing: anyone
     auto_mode: false
     instructions: |
 ${block(advisor, 6)}
@@ -83,7 +85,7 @@ rooms:
     instructions: |
 ${block(clientRoom, 6)}
   - name: "{team}-{client}-scope-desk"
-    description: The vendor's private Scope Desk. The client is not here.
+    description: The vendor's private Scope Desk. Anyone here can approve change orders, so never invite the client.
     bridge: "{bridge}"
     channel_type: channel_private
     agents: ["{team}-watch", "{team}-advisor"]

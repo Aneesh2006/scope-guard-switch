@@ -19,12 +19,12 @@ Each client engagement gets two Slack channels (Switch rooms) and two agents:
 | Room | Members | Purpose |
 |---|---|---|
 | **Client channel** `<prefix>-<client>-client` | You, the client, *Scope Watch* | The normal project chat. Scope Watch reads every message and **never writes a message here**. |
-| **Scope Desk** `<prefix>-<client>-scope-desk` (private) | You, *Scope Watch*, *Scope Advisor* | Scope alerts, your options, drafted replies, and the SOW and Scope notes documents. |
+| **Scope Desk** `<prefix>-<client>-scope-desk` (private) | You, your teammates, *Scope Watch*, *Scope Advisor* | Scope alerts, your options, drafted replies, and the SOW and Scope notes documents. |
 
 | Agent | Job | Who can talk to it |
 |---|---|---|
 | **Scope Watch** `<prefix>-watch` | Classifies every client message against the SOW and notes: in scope, not a request, revision, out of scope, or unclear. Counts revision rounds. Raises an alert in the Scope Desk when needed. | Anyone in its rooms (it has to hear the client) |
-| **Scope Advisor** `<prefix>-advisor` | Offers you options, drafts the reply to the client, keeps the change-order ledger and the Scope notes. | Only you and your agents. Switch refuses anyone else, including the client. |
+| **Scope Advisor** `<prefix>-advisor` | Offers you options, drafts the reply to the client, keeps the change-order ledger and the Scope notes. | Members of the Scope Desk only: you and the teammates you invite. Switch refuses anyone else, including the client. |
 
 ```mermaid
 flowchart LR
@@ -65,9 +65,9 @@ Scope Advisor asks what you'd like to do. You reply `2` ("charge extra") and get
 ## What breaks without Switch
 - **The agent can't sit in the client's channel.** Switch makes a Claude Code session a member of a Slack channel, and `!assign-agent` gives it every message without an @-mention. Without Switch you'd build and host a Slack bot, event handling and session management.
 - **No private side room.** Switch rooms and their membership keep the Advisor and the client apart. The client channel has only Scope Watch, which never writes there; the Advisor exists only in the Scope Desk.
-- **No enforced boundary.** Scope Advisor accepts messages only from you and your own agents. Switch refuses anyone else, including the client. That's enforced by Switch, not by a prompt.
+- **No enforced boundary.** Scope Advisor accepts messages only from members of its rooms, and its only room is the Scope Desk. Switch refuses anyone else, including the client. That's enforced by Switch, not by a prompt.
 - **No shared source of truth.** The SOW and Scope notes are Switch room documents, so every agent reads the same version.
-- **No sign-off in chat.** Scope Advisor runs with auto mode off, so its ledger writes appear in the Scope Desk as permission requests you allow or deny.
+- **No team sign-off in chat.** Scope Advisor runs with auto mode off, so its ledger writes appear in the Scope Desk as permission requests. Switch lets anyone who can talk to the agent answer them, so you or any teammate in the Scope Desk can approve a change order, and the ledger records who chose it.
 - **No one-step setup.** `scope-guard.template.yaml` creates both agents, both rooms, the link between them and the SOW in one action in Switch Console.
 
 ## Setup
@@ -83,6 +83,7 @@ You need Switch Console with a running server, Slack connected to it (Home → M
 2. **Point Scope Watch at the client channel.** In the client channel, type `!assign-agent @scope-watch` (use your prefix). Then type `!assign-agent` on its own: it should name Scope Watch. Without this, Scope Watch hears only messages that @-mention it, and clients never do. Then, in the **Scope Desk**, type `!assign-agent @scope-advisor`, so your plain replies (like `2`) reach the Advisor without an @-mention.
 3. **Tell the client.** Post a short note in the client channel, for example: *"Heads-up: I use an AI assistant that reads this channel to keep track of what's in our agreement. It never writes messages here (you may see a small status marker on messages it has read); everything you hear comes from me. Just ask if you'd like it turned off."*
 4. **Invite the client** to the Slack channel. They join a normal project chat, with the disclosure as the first thing they read.
+5. **Optional: add teammates.** Invite them to the **Scope Desk**. Never invite the client there. Anyone in the Scope Desk can pick options and approve change orders.
 
 **Running it 24/7:** a local Switch server stops when your computer sleeps or restarts. For always-on use, run the server and both agents on a Linux machine (for example an AWS EC2 instance) added in Switch Console → Settings → Remote hosts.
 
@@ -99,7 +100,7 @@ What we know doesn't work, or hasn't been proven yet. Test evidence is in [tests
 
 **Product scope**
 - **Read-only in the client channel by design.** Every reply to the client comes from you; Scope Guard drafts it.
-- **One approver.** Only the person who created the rooms (and their agents) can instruct Scope Advisor and approve ledger entries. Agency teammates can read the Scope Desk but can't make decisions there yet.
+- **Approval rights follow room membership.** Everyone in the Scope Desk can approve change orders; there are no per-person roles (such as "can draft but not approve"). Switch Console can restrict the Advisor to named people by hand (**Who can talk to your agent → Custom rules**), but a template can't set that.
 - **No invoicing.** Accepted change orders are logged, not billed. Exporting them to your invoicing tool is manual.
 
 **Platform (Switch and Slack)**
@@ -125,11 +126,10 @@ We tested Switch hard while building this, and shared what we found:
 
 ## Roadmap
 1. **Read screenshots without catch-up**, as soon as [switch#1693](https://github.com/sandbox-quantum/switch/issues/1693) is resolved.
-2. **Team approvals**: let named agency teammates approve change orders, using Switch's per-person rules for who can talk to an agent.
-3. **Invoicing**: send accepted change orders to Stripe, QuickBooks or Xero as draft invoice lines.
-4. **Estimates vs actuals**: compare change-order hours with time tracked in Harvest or Toggl, so estimates improve over time.
-5. **Automated evaluation**: run `tests/requests.md` against the agent instructions on every change, and fail CI when a verdict regresses.
-6. **Weekly scope digest**: a scheduled summary per client of requests, change orders and money recovered or given away.
+2. **Invoicing**: send accepted change orders to Stripe, QuickBooks or Xero as draft invoice lines.
+3. **Estimates vs actuals**: compare change-order hours with time tracked in Harvest or Toggl, so estimates improve over time.
+4. **Automated evaluation**: run `tests/requests.md` against the agent instructions on every change, and fail CI when a verdict regresses.
+5. **Weekly scope digest**: a scheduled summary per client of requests, change orders and money recovered or given away.
 
 ## Repository
 | Path | What it is |
