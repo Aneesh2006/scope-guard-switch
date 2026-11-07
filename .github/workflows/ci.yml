@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Template matches its sources
+        run: |
+          node scripts/build-template.mjs
+          git diff --exit-code -- scope-guard.template.yaml \
+            || { echo "::error::Template is stale. Run 'node scripts/build-template.mjs' and commit the result."; exit 1; }
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Template is valid and keeps the client away from agents
+        run: |
+          pip install pyyaml==6.0.2
+          python scripts/check-template.py
+
+      - name: No secrets committed
+        run: |
+          ! git grep -nE 'xox[abpr]-[0-9A-Za-z-]{10,}|xapp-[0-9A-Za-z-]{10,}|sk-ant-[0-9A-Za-z_-]{20,}|AKIA[0-9A-Z]{16}'

@@ -32,3 +32,6 @@ The following are not included: copywriting, stock photo purchases, logo or bran
 
 ## §7 Change process
 Out-of-scope work requires a written change order. The client accepts the change order in the project chat, and the vendor approves it before work starts. Work is not started on unapproved change orders.
+
+## §8 AI assistant
+The vendor uses an AI assistant (Scope Guard) that reads the messages and files in the project chat and compares requests with this agreement. It never posts in the project chat, never contacts the client, and never makes decisions: every reply, price and change order comes from the vendor. Messages are processed by the vendor's AI provider. The client may ask the vendor at any time to turn it off for this project.

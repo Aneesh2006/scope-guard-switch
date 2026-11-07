@@ -25,11 +25,6 @@ params:
     description: Agents are created as <prefix>-watch and <prefix>-advisor.
     default: scope
     pattern: "^[a-z0-9][a-z0-9-]*$"
-  client:
-    type: user
-    label: Client's username
-    description: The client's account on the messaging app. They join the client channel only.
-    default: dana
   bridge:
     type: bridge
     default: [Slack, Mattermost, $first]
@@ -74,14 +69,14 @@ group:
   description: Scope Guard for the Acme Co website project.
 rooms:
   - name: "{team}-acme-client"
-    description: Client conversation. Agents only listen here.
+    description: Project chat with Acme Co. An AI assistant (Scope Watch) reads this channel for the vendor to track scope. It never posts here.
     bridge: "{bridge}"
     channel_type: channel_private
     agents: ["{team}-watch"]
-    users: ["{$creator}", "{client}"]
+    # The client is invited by hand after !assign-agent, so they never see setup commands (README, Setup).
+    users: ["{$creator}"]
     instructions: |
 ${block(clientRoom, 6)}
-    kickoff: "!assign-agent @{team}-watch"
   - name: "{team}-acme-scope-desk"
     description: The vendor's private Scope Desk. The client is not here.
     bridge: "{bridge}"
