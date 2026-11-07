@@ -101,7 +101,7 @@ You need Switch Console with a running server, Slack connected to it (Home → M
    - **Name prefix** (default `scope`): the agents become `<prefix>-watch` and `<prefix>-advisor`. Use a new prefix for each client.
    - **Client name** (default `acme`): used in the channel names, e.g. `scope-globex-client`.
    - **Signed scope of work (SOW)**: paste your client's SOW as text, keeping its section numbers. It's pre-filled with the Acme sample. Got a PDF? Keep the sample here and attach the PDF in the Scope Desk afterwards: the Advisor saves it as "SOW (uploaded)", which takes precedence.
-   - **Messaging app**: your Slack connection.
+   - **Messaging app**: your Slack connection. The template has no Slack-specific code, so this field can also point at a Mattermost, Discord or Telegram connection in Switch, but we've only tested Slack.
 
    **Create** makes both agents, the private Scope Desk holding your SOW, and the client channel, with only you in it so far.
 
