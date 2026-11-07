@@ -17,7 +17,6 @@ Stack: one Switch template (YAML, version 1) creating two Claude Code agents and
 - `LICENSE`: MIT, Team Scope Guard
 - `scope-guard.template.yaml`: **generated**; the file imported in Switch Console → Templates
 - `README.md`: for hackathon judges and users
-- `DEPLOYMENT.md`: running it 24/7 on AWS EC2 as a Switch remote host
 
 ## Commands
 - Install: nothing to install. Needs Node ≥18, plus Python with PyYAML for the verify step.

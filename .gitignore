@@ -15,3 +15,5 @@ node_modules/
 Thumbs.db
 
 .serena
+DEPLOYMENT.md
+switch-features.md

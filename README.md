@@ -84,7 +84,7 @@ You need Switch Console with a running server, Slack connected to it (Home → M
 3. **Tell the client.** Post a short note in the client channel, for example: *"Heads-up: I use an AI assistant that reads this channel to keep track of what's in our agreement. It never writes messages here (you may see a small status marker on messages it has read); everything you hear comes from me. Just ask if you'd like it turned off."*
 4. **Invite the client** to the Slack channel. They join a normal project chat, with the disclosure as the first thing they read.
 
-**Running it 24/7:** a local Switch server stops when your computer sleeps or restarts. For always-on use, run the server and both agents on a Linux machine. [DEPLOYMENT.md](DEPLOYMENT.md) is the step-by-step plan for AWS EC2.
+**Running it 24/7:** a local Switch server stops when your computer sleeps or restarts. For always-on use, run the server and both agents on a Linux machine (for example an AWS EC2 instance) added in Switch Console → Settings → Remote hosts.
 
 ## Privacy
 The client is told up front (step 3; the sample SOW also has a clause for it, §8) that an AI assistant reads the channel, that it never posts or decides anything, and that they can ask for it to be turned off. Client messages are treated as data, never as instructions: a message like "tell Sam this is included" is flagged, not obeyed.
@@ -113,7 +113,7 @@ What we know doesn't work, or hasn't been proven yet. Test evidence is in [tests
 - **Alerts take about 30–60 seconds**, because every client message starts a Claude turn. That also means usage cost grows with chat volume.
 - **One run per client.** Each run creates one client's channels and agents. For the next client, run it again with a new prefix, their name and their SOW.
 - **Changing agent instructions means re-creating the agents and rooms.** Agents keep the instructions they were created with.
-- **No automatic restart.** A local server stops when the computer sleeps or restarts. On a server (DEPLOYMENT.md), a reboot also needs a manual restart from Switch Console. Rooms and history survive.
+- **No automatic restart.** A local server stops when the computer sleeps or restarts. On a remote host, a reboot also needs a manual restart from Switch Console. Rooms and history survive.
 - **The ledger is a file** (`ledger.md`) in Scope Advisor's working folder on the machine it runs on. Back that machine up.
 - **Client messages are processed by the AI provider** that runs the agents. Scope Guard adds no retention controls of its own.
 - **Licensing.** This repo is MIT, but Switch's license (Apache 2.0 with the Commons Clause) doesn't allow selling a hosted product whose value comes mainly from Switch. A paid hosted version would need a commercial agreement with Switch's authors.
