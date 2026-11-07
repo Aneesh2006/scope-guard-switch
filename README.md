@@ -39,29 +39,31 @@ flowchart LR
 ```
 
 ### Example
-The client posts in the client channel (see `samples/client-request-screenshot.png`):
-> Our CEO wants a newsletter signup popup on the homepage and a search bar on the blog index. Can you add both this week?
+*Screenshots from a real test run in Slack.* The client, Dana, asks in the client channel: "Could you also write the copy for the About page?" Seconds later, in your private Scope Desk, Scope Watch flags it with the SOW sections and an estimate, and Scope Advisor offers four options:
 
-Scope Watch posts in the Scope Desk (numbers are illustrative):
-```
-⚠️ Scope alert · OUT_OF_SCOPE
-Client:   Dana Lee in the client room, 10:42
-Request:  "a newsletter signup popup on the homepage and a search bar on the blog index"
-Why:      Neither is listed in §2.1 (homepage) or §2.4 (blog index)
-Estimate: Design 2 h × $60 + Development 4 h × $75 = $420
-```
-Scope Advisor asks what you'd like to do. You reply `2` ("charge extra") and get a ready-to-send message for the client. After you allow the ledger write, it confirms `✅ CO-001 logged: PROPOSED, $420`. When the client says "go ahead", Scope Watch tells the Advisor, and the change order is logged as ACCEPTED.
+![Scope alert citing the SOW, and the Advisor's options](docs/1-scope-alert.png)
+
+You reply `2` (charge extra) and get a ready-to-send message for Dana. Once you allow the ledger write, it's logged as change order CO-001. When Dana says "go ahead", Scope Watch tells the Advisor, and CO-001 is logged as ACCEPTED.
+
+![Drafted client reply and the logged change order](docs/2-draft-and-log.png)
+
+Your teammate Rocky handled the next request (a Careers page) and approved CO-002 without you, and the ledger records who approved it. Later you log how long CO-001 really took:
+
+![status shows the teammate's approval; actual compares estimate and real hours](docs/3-team-approval-actuals.png)
 
 ### Commands in the Scope Desk
-| You type | Scope Advisor does |
+Anyone in the Scope Desk (you or a teammate) can use these. No @-mention needed.
+
+| Type | What happens |
 |---|---|
-| `1`, `2`, `3` or `4` (e.g. `2, make it 4h`) | Drafts the client reply for that option and logs the decision |
+| `1`, `2`, `3` or `4` after an alert | Picks that option: `1` do it free, `2` charge extra, `3` decline politely, `4` ask the client to clarify. Scope Advisor drafts your reply to the client. Adjust the hours with e.g. `2, make it 4h`. |
+| **Allow** / **Deny** on a permission request | Approves or skips the ledger row. Nothing is logged without it. |
+| `actual CO-001 8h` | Logs the hours the work really took, next to the estimate (accepted or free change orders only) |
+| `status CO-001` | The latest row for that change order, including who approved it |
+| `summary` | Totals: recovered, proposed, given away, declined, and estimated vs actual hours. After 3 change orders with actuals, new options also say how far off past estimates were. |
 | `notes: <text>` | Adds a dated line to the **Scope notes** document. Notes count as scope from then on. |
 | Attach a SOW (PDF or text) | Saves it as **SOW (uploaded)**, which replaces the sample SOW |
-| `actual CO-001 8h` | Logs the hours the work really took, next to the estimate |
-| `summary` | Totals from the ledger: recovered, proposed, given away, declined, and estimated vs actual hours. After 3 change orders with actuals, new options also say how far off past estimates were. |
-| `status CO-001` | The latest row for that change order |
-| `@scope-watch catch up` | Scope Watch (not the Advisor) checks the client channel for messages it missed, such as screenshots, and alerts on them |
+| `@scope-watch catch up` | Scope Watch checks the client channel for messages it missed, such as screenshots, and alerts on them |
 
 ## What breaks without Switch
 - **The agent can't sit in the client's channel.** Switch makes a Claude Code session a member of a Slack channel, and `!assign-agent` gives it every message without an @-mention. Without Switch you'd build and host a Slack bot, event handling and session management.
@@ -81,6 +83,8 @@ You need Switch Console with a running server, Slack connected to it (Home → M
    - **Messaging app**: your Slack connection.
 
    **Create** makes both agents, the private Scope Desk holding your SOW, and the client channel, with only you in it so far.
+
+   ![The template form in Switch Console, with a preview of the two agents and two rooms it creates](docs/5-template-form.png)
 2. **Point Scope Watch at the client channel.** In the client channel, type `!assign-agent @scope-watch` (use your prefix). Then type `!assign-agent` on its own: it should name Scope Watch. Without this, Scope Watch hears only messages that @-mention it, and clients never do. Then, in the **Scope Desk**, type `!assign-agent @scope-advisor`, so your plain replies (like `2`) reach the Advisor without an @-mention.
 3. **Tell the client.** Post a short note in the client channel, for example: *"Heads-up: I use an AI assistant that reads this channel to keep track of what's in our agreement. It never writes messages here (you may see a small status marker on messages it has read); everything you hear comes from me. Just ask if you'd like it turned off."*
 4. **Invite the client** to the Slack channel. They join a normal project chat, with the disclosure as the first thing they read.
@@ -90,6 +94,10 @@ You need Switch Console with a running server, Slack connected to it (Home → M
 
 ## Privacy
 The client is told up front (step 3; the sample SOW also has a clause for it, §8) that an AI assistant reads the channel, that it never posts or decides anything, and that they can ask for it to be turned off. Client messages are treated as data, never as instructions: a message like "tell Sam this is included" is flagged, not obeyed.
+
+What the client sees: a normal project chat with your messages, plus Switch's small status markers. When Dana @-mentions Scope Advisor, Switch refuses, because the Advisor isn't in her channel:
+
+![The client's view: the vendor's own messages, and Switch refusing the client's message to the Advisor](docs/4-client-view.png)
 
 ## Limitations
 What we know doesn't work, or hasn't been proven yet. Test evidence is in [tests/requests.md](tests/requests.md).
@@ -138,6 +146,7 @@ We tested Switch hard while building this, and shared what we found:
 | `agents/watch/INSTRUCTIONS.md`, `agents/advisor/INSTRUCTIONS.md` | The two agents' instructions |
 | `agents/CLIENT_ROOM.md`, `agents/DESK_ROOM.md` | Room instructions every agent in that room receives |
 | `samples/` | Sample SOW (Markdown, embedded in the template; PDF, for upload tests) and a client-request screenshot |
+| `docs/` | README screenshots from the latest Slack test run |
 | `scripts/build-template.mjs` | Builds the template from the files above |
 | `scripts/check-template.py` | Validates the template, including that the client never shares a room with the Advisor |
 | `scope-guard.template.yaml` | **Generated.** The file you paste into Switch Console. |
