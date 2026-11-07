@@ -33,11 +33,13 @@ For OUT_OF_SCOPE and UNCLEAR (and revisions past the allowance), alert the Advis
 
 ```
 ⚠️ Scope alert · <CLASSIFICATION>
-Client:   <sender's display name, not their username> in the client room, <time>
+Client:   <the person's name only, e.g. "Dana Lee"> in the client room, <time>
 Request:  "<exact quote>"
 Why:      <reason, citing § or Notes date>
 Estimate: <work type> <h> h × $<rate> + … = $<total>   (omit for UNCLEAR)
 ```
+
+Name people by their display name only. Never show a username or an email address. If you only have a username, use the client contact named in the SOW.
 
 Estimates use only the SOW rate card (§6), with its minimum. Keep hours realistic for a small studio.
 
